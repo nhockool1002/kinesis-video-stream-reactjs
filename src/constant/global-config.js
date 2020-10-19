@@ -1,4 +1,8 @@
-import { store } from '@risingstack/react-easy-state';
+import { store } from '@risingstack/react-easy-state'
+
+function getRandomClientId() {
+  return Math.random().toString(36).substring(2).toUpperCase()
+}
 
 const appStore = store({
   useTrickleICE: true,
@@ -6,7 +10,7 @@ const appStore = store({
   clientId: getRandomClientId(),
   channelName: '',
   channelARN: '',
-  master:  {
+  master: {
     showVideoPlayers: false,
     signalingClient: null,
     peerConnectionByClientId: {},
@@ -39,12 +43,5 @@ const appStore = store({
     }
   }
 })
-
-function getRandomClientId() {
-  return Math.random()
-      .toString(36)
-      .substring(2)
-      .toUpperCase();
-}
 
 export { appStore }
