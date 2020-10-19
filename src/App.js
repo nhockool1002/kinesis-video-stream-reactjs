@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 function App() {
   return (
     <div className="App">
+      <h2>Hello !</h2>
       <Suspense fallback={<div>Loading ...</div>}>
         <BrowserRouter>
 
