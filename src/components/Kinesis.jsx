@@ -9,6 +9,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {
   KINESIS_CHANNEL_NAME
 } from '../constant/setup'
+import socketIOClient from 'socket.io-client'
+import { useEffect } from 'react';
 
 function Kinesis(props) {
 
@@ -16,6 +18,11 @@ function Kinesis(props) {
   appStore.master.view.remote.ref = useRef(null);
   appStore.viewer.view.local.ref = useRef(null);
   appStore.viewer.view.remote.ref = useRef(null);
+  const socket = socketIOClient('http://localhost:8675')
+  socket.on('connection', (data) => {
+    console.log('connection : ', data)
+  })
+
   function testMaster() {
     appStore.master.showVideoPlayers = true
     startMaster(appStore.master.view.local.ref, appStore.master.view.remote.ref, KINESIS_CHANNEL_NAME);
