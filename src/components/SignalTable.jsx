@@ -19,8 +19,6 @@ SignalTable.defaultProps = {
 function SignalTable(props) {
   const { onClick } = props
   const [data, setData] = useState([])
-  const [show, setShow] = useState({display: 'none'})
-  const [showMTG, setShowMTG] = useState({display: 'block'});
   const dispatch = useDispatch()
   const socket = socketIOClient(`${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_PORT}`);
 
@@ -49,11 +47,6 @@ function SignalTable(props) {
     }
   }
 
-  function clickOpenMeeting() {
-    setShow({display: 'block'})
-    setShowMTG({display: 'none'})
-  }
-
   const action = addList(data)
   dispatch(action)
 
@@ -62,6 +55,7 @@ function SignalTable(props) {
       <thead>
         <tr>
           <th>SignalName</th>
+          <th>Open</th>
           <th>Join</th>
         </tr>
       </thead>
@@ -70,10 +64,12 @@ function SignalTable(props) {
           <tr key={item.id}>
             <td>{item.ChannelName}</td>
             <td>
-              <NavLink color="info" to={`/kvs/master/${item.id}`} className="btn btn-danger" target="_blank" onClick={clickOpenMeeting} style={showMTG}>
+              <NavLink color="info" to={`/kvs/master/${item.id}`} className="btn btn-danger" target="_blank">
                 OPEN MEETING
               </NavLink>
-              <Button color="info" onClick={() => handleClick(item)} style={show}>
+            </td>
+            <td>
+            <Button color="info" onClick={() => handleClick(item)}>
                 JOIN
               </Button>
             </td>
