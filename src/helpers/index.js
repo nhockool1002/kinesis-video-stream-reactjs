@@ -95,7 +95,13 @@ export const createSignalChannel = async (channelName) => {
  */
 export const showSignalChannel = async () => {
   const kinesisVideoClient = createNewKinesisVideo()
-
-  const ListDta = await kinesisVideoClient.listSignalingChannels().promise()
-  console.log('[LIST_SIGNALING_CHANNEL] Channel ARN: ', ListDta.ChannelInfoList)
+  return kinesisVideoClient
+    .listSignalingChannels()
+    .promise()
+    .then((res) => {
+      return res.ChannelInfoList
+    })
+    .catch((error) => {
+      return error
+    })
 }

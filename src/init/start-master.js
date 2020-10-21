@@ -13,6 +13,43 @@ import {
 } from '../constant/setup'
 import * as KinesisVideoHelper from '../helpers'
 
+const stopMaster = () => {
+  console.log('[MASTER] Stopping master connection');
+    if (appStore.master.signalingClient) {
+        appStore.master.signalingClient.close();
+        appStore.master.signalingClient = null;
+    }
+
+    Object.keys(appStore.master.peerConnectionByClientId).forEach(clientId => {
+        appStore.master.peerConnectionByClientId[clientId].close();
+    });
+    appStore.master.peerConnectionByClientId = [];
+
+    if (appStore.master.localStream) {
+        appStore.master.localStream.getTracks().forEach(track => track.stop());
+        appStore.master.localStream = null;
+    }
+
+    appStore.master.remoteStreams.forEach(remoteStream => remoteStream.getTracks().forEach(track => track.stop()));
+    appStore.master.remoteStreams = [];
+
+    if (appStore.master.peerConnectionStatsInterval) {
+        clearInterval(appStore.master.peerConnectionStatsInterval);
+        appStore.master.peerConnectionStatsInterval = null;
+    }
+
+    if (appStore.master.localView) {
+        appStore.master.localView.srcObject = null;
+    }
+
+    if (appStore.master.remoteView) {
+        appStore.master.remoteView.srcObject = null;
+    }
+
+    if (appStore.master.dataChannelByClientId) {
+        appStore.master.dataChannelByClientId = {};
+    }
+}
 const startMaster = async function (localView, remoteView, channelName) {
   console.log('|-> Khởi tạo credentials ...')
   const credentials = KinesisVideoHelper.credentials()
@@ -267,4 +304,4 @@ const startMaster = async function (localView, remoteView, channelName) {
   appStore.master.signalingClient.open()
 }
 
-export { startMaster }
+export { startMaster, stopMaster }

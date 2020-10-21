@@ -13,6 +13,46 @@ import {
 } from '../constant/setup'
 import * as KinesisVideoHelper from '../helpers'
 
+const stopViewer = () => {
+  console.log('[VIEWER] Stopping viewer connection');
+    if (appStore.viewer.signalingClient) {
+        appStore.viewer.signalingClient.close();
+        appStore.viewer.signalingClient = null;
+    }
+
+    if (appStore.viewer.peerConnection) {
+        appStore.viewer.peerConnection.close();
+        appStore.viewer.peerConnection = null;
+    }
+
+    if (appStore.viewer.localStream) {
+        appStore.viewer.localStream.getTracks().forEach(track => track.stop());
+        appStore.viewer.localStream = null;
+    }
+
+    if (appStore.viewer.remoteStream) {
+        appStore.viewer.remoteStream.getTracks().forEach(track => track.stop());
+        appStore.viewer.remoteStream = null;
+    }
+
+    if (appStore.viewer.peerConnectionStatsInterval) {
+        clearInterval(appStore.viewer.peerConnectionStatsInterval);
+        appStore.viewer.peerConnectionStatsInterval = null;
+    }
+
+    if (appStore.viewer.localView) {
+        appStore.viewer.localView.srcObject = null;
+    }
+
+    if (appStore.viewer.remoteView) {
+        appStore.viewer.remoteView.srcObject = null;
+    }
+
+    if (appStore.viewer.dataChannel) {
+        appStore.viewer.dataChannel = null;
+    }
+}
+
 const startViewer = async function (localView, remoteView, channelName) {
   console.log('localView', localView)
   console.log('remoteView', remoteView.current.srcObject)
@@ -234,4 +274,4 @@ const startViewer = async function (localView, remoteView, channelName) {
   appStore.viewer.signalingClient.open()
 }
 
-export { startViewer }
+export { startViewer, stopViewer }
