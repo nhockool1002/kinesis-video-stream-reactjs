@@ -13,9 +13,7 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-      - run: ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-      - run: brew install yarn
-      - run: yarn install
+      - run: npm run install
       - save_cache:
           paths:
             - node_modules
@@ -30,7 +28,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: yarn build
+      - run: npm run build
       - persist_to_workspace:
           root: .
           paths:
@@ -41,21 +39,21 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: yarn test
+      - run: npm run test
   e2e:
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
           at: .
-      - run: yarn test
+      - run: npm run test
   lint:
     <<: *defaults
     steps:
       - checkout
       - attach_workspace:
           at: .
-      - run: yarn lint
+      - run: npm run lint
 workflows:
   version: 2
   build_accept_deploy:
