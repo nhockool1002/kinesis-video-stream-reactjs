@@ -38,6 +38,7 @@
       "browser": true,
       "es6": true
     },
+    "ignorePatterns": [ "gists/*", "vendor/*", "node_modules/*" ], 
     "overrides": [
       {
         "files": [
