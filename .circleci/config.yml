@@ -1,7 +1,7 @@
 defaults: &defaults
   #working_directory: ./circleci
   docker:
-    - image: circleci/node:8
+    - image: circleci/node:12
 
 version: 2
 jobs:
@@ -10,14 +10,20 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
+      - run: curl -o- -L https://yarnpkg.com/install.sh | bash
+
       - restore_cache:
+          name: Restore Yarn Package Cache
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run: npm install
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install
       - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.cache/yarn
       - persist_to_workspace:
           root: .
           paths:
@@ -28,7 +34,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: npm run build
+      - run: yarn build
       - persist_to_workspace:
           root: .
           paths:
@@ -39,32 +45,15 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: npm run test
-  e2e:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run: npm run test
-  lint:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run: npm run lint
+      - run: yarn test
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - prepare
-      - lint:
-          requires:
-            - prepare
       - build:
           requires:
-            - lint
+            - prepare
       - tu:
           requires:
             - build
