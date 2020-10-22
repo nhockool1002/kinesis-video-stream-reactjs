@@ -4,9 +4,6 @@ defaults: &defaults
     - image: circleci/node:8
 
 version: 2
-package:
-  exclude:
-    - node_modules/**
 jobs:
   prepare:
     <<: *defaults
@@ -17,6 +14,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
       - run: npm install
+      - run: npm start
       - save_cache:
           paths:
             - node_modules
