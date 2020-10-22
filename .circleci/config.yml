@@ -10,15 +10,20 @@ jobs:
     steps:
       - checkout
       # Download and cache dependencies
+      - run: curl -o- -L https://yarnpkg.com/install.sh | bash
+
       - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run: npm install
-      - run: npm audit fix
+        name: Restore Yarn Package Cache
+        keys:
+          - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --immutable
       - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+            - ~/.cache/yarn
       - persist_to_workspace:
           root: .
           paths:
@@ -29,7 +34,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: npm run build
+      - run: yarn build
       - persist_to_workspace:
           root: .
           paths:
@@ -40,13 +45,15 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: npm run test
+      - run: yarn test
 workflows:
   version: 2
   build_accept_deploy:
     jobs:
       - prepare
-      - build
+      - build:
+          requires:
+            - prepare
       - tu:
           requires:
             - build
