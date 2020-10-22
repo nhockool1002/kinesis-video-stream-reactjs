@@ -1,6 +1,9 @@
 {
     "settings": {
-      "version": "999.999.999",
+      "version": "7",
+      "react": {
+        "version": "detect"
+      },
       "import/resolver": {
         "node": {
           "paths": ["src"]
