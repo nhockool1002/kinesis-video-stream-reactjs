@@ -61,15 +61,15 @@ function SignalTable(props) {
       </thead>
       <tbody>
         {data.map((item) => (
-          <tr key={item.id}>
+          <tr key={item.ChannelName}>
             <td>{item.ChannelName}</td>
             <td>
-              <NavLink color="info" to={`/kvs/master/${item.id}`} className="btn btn-danger" target="_blank">
+              <NavLink color="info" to={`/kvs/master/${item.ChannelName}`} className="btn btn-danger" target="_blank">
                 OPEN MEETING
               </NavLink>
             </td>
             <td>
-            <Button color="info" onClick={() => handleClick(item)}>
+              <Button color="info" onClick={() => handleClick(item)}>
                 JOIN
               </Button>
             </td>

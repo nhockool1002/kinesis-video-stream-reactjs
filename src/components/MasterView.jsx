@@ -13,6 +13,7 @@ function MasterView(props) {
   appStore.viewer.view.local.ref = useRef(null);
   appStore.viewer.view.remote.ref = useRef(null);
   const [show, setShow] = useState({display: 'none'})
+  const [showStart, setShowStart] = useState({display: 'block'})
   const {id} = useParams();
   const socket = socketIOClient(`${process.env.REACT_APP_API_BASE_URL}:${process.env.REACT_APP_API_PORT}`);
 
@@ -28,6 +29,12 @@ function MasterView(props) {
     if (onEndCalling) {
       return onEndCalling(id, data)
     }
+  }
+
+  function startMasterNow() {
+    startMaster(appStore.master.view.local.ref, appStore.master.view.remote.ref, id);
+    setShowStart({display: 'none'})
+    setShow({display: 'block'})
   }
   return (
     <div>
@@ -61,6 +68,14 @@ function MasterView(props) {
           </Col>
         </Row>
       </Container>
+      <Button 
+        type='button'
+        color="success" 
+        onClick={startMasterNow}
+        style={showStart}
+      >
+        JOIN
+      </Button>
       <Button 
         type='button'
         color="danger" 
