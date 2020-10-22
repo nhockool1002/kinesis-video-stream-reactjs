@@ -11,7 +11,6 @@ export const RESOLUTION_WIDESCREEN = 'widescreen'
 export const ACCEPT_SEND_VIDEO = true
 export const ACCEPT_SEND_AUDIO = true
 
-
 // ERROR
 export const MASTER_COULD_NOT_FIND_CAMERA = '[MASTER] Could not find camera'
 export const VIEWER_COULD_NOT_FIND_CAMERA = '[VIEWER] Could not find camera'

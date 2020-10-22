@@ -1,9 +1,9 @@
-import AWS, { KinesisVideo } from "aws-sdk";
+import AWS, { KinesisVideo } from 'aws-sdk'
 import {
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_KEY,
-  AWS_REGION,
-} from "../constant/setup";
+  AWS_REGION
+} from '../constant/setup'
 /**
  * @description Create credentials object
  */
@@ -11,8 +11,8 @@ export const credentials = () => {
   return new AWS.Credentials({
     accessKeyId: AWS_ACCESS_KEY_ID,
     secretAccessKey: AWS_SECRET_KEY,
-    region: AWS_REGION,
-  });
+    region: AWS_REGION
+  })
 }
 
 /**
@@ -20,20 +20,20 @@ export const credentials = () => {
  * @return KinesisVideo Instance
  */
 export const createNewKinesisVideo = () => {
-  return (new KinesisVideo({
+  return new KinesisVideo({
     region: AWS_REGION,
     credentials: credentials(),
-    endpoint: null,
-  }));
-};
-
-export const describeSignalingChannel = async (channelName) => {
-  const kinesisvideoClient = createNewKinesisVideo();
-  return await kinesisvideoClient
-  .describeSignalingChannel({
-    ChannelName: channelName
+    endpoint: null
   })
-  .promise()
+}
+
+export const describeSignalingChannel = (channelName) => {
+  const kinesisvideoClient = createNewKinesisVideo()
+  return kinesisvideoClient
+    .describeSignalingChannel({
+      ChannelName: channelName
+    })
+    .promise()
 }
 
 /**
@@ -42,27 +42,27 @@ export const describeSignalingChannel = async (channelName) => {
  * @return void
  */
 export const deleteSignalChannel = async (channelName) => {
-  const kinesisVideoClient = createNewKinesisVideo();
+  const kinesisVideoClient = createNewKinesisVideo()
 
   // Get signaling channel ARN
   const describeSignalingChannelResponse = await kinesisVideoClient
     .describeSignalingChannel({
-      ChannelName: channelName,
+      ChannelName: channelName
     })
-    .promise();
+    .promise()
   // Get signaling channel ARN
   await kinesisVideoClient
     .deleteSignalingChannel({
       ChannelARN: describeSignalingChannelResponse.ChannelInfo.ChannelARN,
       CurrentVersion:
-        describeSignalingChannelResponse.ChannelInfo.CurrentVersion,
+        describeSignalingChannelResponse.ChannelInfo.CurrentVersion
     })
-    .promise();
+    .promise()
   console.log(
-    "[DELETE_SIGNALING_CHANNEL] Channel ARN: ",
+    '[DELETE_SIGNALING_CHANNEL] Channel ARN: ',
     describeSignalingChannelResponse.ChannelInfo.ChannelARN
-  );
-};
+  )
+}
 
 /**
  * @description Create Signal Channel by channelName
@@ -70,34 +70,38 @@ export const deleteSignalChannel = async (channelName) => {
  * @return void
  */
 export const createSignalChannel = async (channelName) => {
-  const kinesisVideoClient = createNewKinesisVideo();
+  const kinesisVideoClient = createNewKinesisVideo()
 
   // Get signaling channel ARN
   await kinesisVideoClient
     .createSignalingChannel({
-      ChannelName: channelName,
+      ChannelName: channelName
     })
-    .promise();
+    .promise()
 
   // Get signaling channel ARN
   const describeSignalingChannelResponse = await kinesisVideoClient
     .describeSignalingChannel({
-      ChannelName: channelName,
+      ChannelName: channelName
     })
-    .promise();
-  const channelARN = describeSignalingChannelResponse.ChannelInfo.ChannelARN;
-  console.log("[CREATE_SIGNALING_CHANNEL] Channel ARN: ", channelARN);
-};
+    .promise()
+  const channelARN = describeSignalingChannelResponse.ChannelInfo.ChannelARN
+  console.log('[CREATE_SIGNALING_CHANNEL] Channel ARN: ', channelARN)
+}
 
 /**
  * @description Show List Signal Channel
  * @return Collection ListDta
  */
 export const showSignalChannel = async () => {
-  const kinesisVideoClient = createNewKinesisVideo();
-
-  const ListDta = await kinesisVideoClient
-  .listSignalingChannels()
-  .promise();
-  console.log('[LIST_SIGNALING_CHANNEL] Channel ARN: ', ListDta.ChannelInfoList);
+  const kinesisVideoClient = createNewKinesisVideo()
+  return kinesisVideoClient
+    .listSignalingChannels()
+    .promise()
+    .then((res) => {
+      return res.ChannelInfoList
+    })
+    .catch((error) => {
+      return error
+    })
 }

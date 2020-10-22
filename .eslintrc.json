@@ -1,0 +1,52 @@
+{
+    "settings": {
+      "version": "7",
+      "react": {
+        "version": "detect"
+      },
+      "import/resolver": {
+        "node": {
+          "paths": ["src"]
+        }
+      }
+    },
+    "parser": "babel-eslint",
+    "extends": [
+      "airbnb-base",
+      "prettier",
+      "plugin:react/recommended"
+    ],
+    "plugins": [
+      "prettier",
+      "react"
+    ],
+    "rules": {
+      "prettier/prettier": [
+        "error"
+      ],
+      "no-return-assign": 0,
+      "no-underscore-dangle": "warn",
+      "consistent-return": 0,
+      "no-console": "off",
+      "camelcase": "warn",
+      "array-callback-return": "warn",
+      "react/no-unescaped-entities": "warn",
+      "import/prefer-default-export": 0
+    },
+    "env": {
+      "jasmine": true,
+      "browser": true,
+      "es6": true
+    },
+    "ignorePatterns": [ "gists/*", "vendor/*", "node_modules/*" ], 
+    "overrides": [
+      {
+        "files": [
+          "**/*.test.js"
+        ],
+        "env": {
+          "jest": true
+        }
+      }
+    ]
+  }
